@@ -23,6 +23,24 @@ class _LoginPageState extends State<LoginPage> {
   // TODO: Add text editing controllers (101)
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _unfocusedColor = Colors.grey[600];
+  final _usernameFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameFocusNode.addListener(() {
+      setState(() {
+        //Redraw so that the username label reflects the focus state
+      });
+    });
+    _passwordFocusNode.addListener(() {
+      setState(() {
+        //Redraw so that the password label reflects the focus state
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +54,10 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 Image.asset('assets/diamond.png'),
                 SizedBox(height: 16.0),
-                Text('SHRINE'),
+                Text(
+                  'SHRINE',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
               ],
             ),
             SizedBox(height: 120.0),
@@ -46,28 +67,50 @@ class _LoginPageState extends State<LoginPage> {
             // [Name]
             TextField(
               controller: _usernameController,
+              focusNode: _usernameFocusNode,
               decoration: InputDecoration(
-                filled: true,
+                // filled: true,
                 labelText: "Username",
+                labelStyle: TextStyle(
+                    color: _usernameFocusNode.hasFocus
+                        ? Theme.of(context).accentColor
+                        : _unfocusedColor),
               ),
             ),
             SizedBox(height: 12),
             // [Password]
             TextField(
               controller: _passwordController,
+              focusNode: _passwordFocusNode,
               decoration: InputDecoration(
-                filled: true,
-                labelText: "Password"
+                // filled: true,
+                labelText: "Password",
+                labelStyle: TextStyle(
+                    color: _usernameFocusNode.hasFocus
+                        ? Theme.of(context).accentColor
+                        : _unfocusedColor),
               ),
               obscureText: true,
             ),
             ButtonBar(
               children: <Widget>[
-                FlatButton(onPressed: () {
-                  _usernameController.clear();
-                  _passwordController.clear();
-                }, child: Text("Cancel")),
-                RaisedButton(onPressed: () => Navigator.pop(context), child: Text("Next")),
+                FlatButton(
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                    ),
+                    onPressed: () {
+                      _usernameController.clear();
+                      _passwordController.clear();
+                    },
+                    child: Text("Cancel")),
+                RaisedButton(
+                  shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Next"),
+                  elevation: 8.0,
+                ),
               ],
             )
           ],
